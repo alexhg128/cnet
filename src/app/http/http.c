@@ -6,18 +6,38 @@
 #include "../../native/networking.h"
 
 // Function declaration
-const char* method_not_allowed();
-const char* not_found();
+char* method_not_allowed();
+char* not_found();
 char* bad_request();
-const char* ok();
-const char* ok_with_payload(char* x);
+char* ok();
+char* ok_with_payload(char* x);
 
 // Method declaration
 char* const get = "GET";
 
+void red () {
+  printf("\033[1;31m");
+};
+
+void green () {
+  printf("\033[1;32m");
+};
+
+void reset () {
+  printf("\033[0m");
+};
+
 // Callback for native networking module
 void receive(int socket, char* content) {
     // Get the first word
+    // printf("\n\n%s\n", content);
+    FILE *pFile2;
+    pFile2 = fopen("log.txt", "a");
+    fprintf(pFile2, "\n%s\n", content);
+    fprintf(pFile2, "\n==============================================================================\n");
+    fclose(pFile2);
+    printf("-> ");
+
     char* part = strtok(content, " ");
     // Verify that the first word is not empty and indicates a GET method
     if(part == NULL || strcmp(part, get) != 0) {
@@ -25,12 +45,21 @@ void receive(int socket, char* content) {
         char* res = method_not_allowed();
         send_answer(socket, res);
         free(res);
+        red();
+        printf("[ Method Not Allowed ]\n");
+        reset();
+        return;
     }
+    printf("%.*s ", 10, part);
     // Get the second word (path)
     part = strtok(NULL, " ");
     // If not specified return Bad Request response
     if(part == NULL) {
+        red();
+        printf("[ Bad Request ]\n");
+        reset();
         send_answer(socket, bad_request());
+        return;
     }
     
     // Allocate memory for path building
@@ -45,6 +74,8 @@ void receive(int socket, char* content) {
         strcat(x, "index.html");
     }
 
+    printf("%.*s ", 30, x);
+
     // Declare file variable
     FILE *fp;
     char* buffer = 0;
@@ -56,6 +87,9 @@ void receive(int socket, char* content) {
     // If file not exists return a Not Found response
     if(fp == NULL) {
         // Get response
+        red();
+        printf("[ Not Found ]\n");
+        reset();
         char* res = not_found();
         // Send response
         send_answer(socket, res);
@@ -81,6 +115,9 @@ void receive(int socket, char* content) {
         fclose (fp);
         
         // Build the response with the payload
+        green();
+        printf("[ OK ]\n");
+        reset();
         char* res = ok_with_payload(buffer);
         // Send response
         send_answer(socket, res);
@@ -93,7 +130,7 @@ void receive(int socket, char* content) {
     free(x);
 }
 
-const char* not_available() {
+char* not_available() {
     // Get current time
     time_t mytime;
 	mytime = time(NULL);
@@ -105,7 +142,7 @@ const char* not_available() {
     return res;
 }
 
-const char* not_found() {
+char* not_found() {
     // Get current time
     time_t mytime;
 	mytime = time(NULL);
@@ -113,11 +150,11 @@ const char* not_found() {
     char* res;
     res = (char*) malloc(1000 * sizeof(char));
     // Build the response
-    sprintf(res, "HTTP/1.1 404 Not Found\r\nServer: CNETv1.0\r\nConnection: close\r\nDate: %.24s GMT", ctime(&mytime));
+    sprintf(res, "HTTP/1.1 404 Not Found\r\nServer: CNETv1.0\r\nConnection: close\r\nDate: %.24s GMT\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length: 42\r\n\r\n<html><body><p>Not Found</p></body></html>", ctime(&mytime));
     return res;
 }
 
-const char* method_not_allowed() {
+char* method_not_allowed() {
     // Get current time
     time_t mytime;
 	mytime = time(NULL);
@@ -129,7 +166,7 @@ const char* method_not_allowed() {
     return res;
 }
 
-const char* ok() {
+char* ok() {
     // Get current time
     time_t mytime;
 	mytime = time(NULL);
@@ -141,7 +178,7 @@ const char* ok() {
     return res;
 }
 
-const char* ok_with_payload(char* x) {
+char* ok_with_payload(char* x) {
     // Get the current time
     time_t mytime;
 	mytime = time(NULL);

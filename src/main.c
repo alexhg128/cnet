@@ -25,7 +25,7 @@
 
 int main() {
 
-    printf("=== CNET SERVER ===\n\n");
+    printf("\n================ CNET SERVER ================\n\n");
 
     if(WINDOWS) {
         printf("Windows is not currently supported");
