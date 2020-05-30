@@ -1,4 +1,6 @@
-# C Lightweight Web Server
+# C NET Web Server
+
+A lightweight C Web Server by Alejandro Hahn
 
 ## Utilities needed
 
@@ -29,6 +31,13 @@ cmake .
 make
 ```
 
+## Compiling in debug mode
+
+```
+chmod +x ./compile_debug.sh
+./compile_debug.sh
+```
+
 ## Running
 
 ```
@@ -39,4 +48,6 @@ make
 
 ```
 curl -X GET -D - localhost:8080
+curl -X GET -D - localhost:8080/TC2025.pdf
+curl -X GET -D - localhost:8080/TC2025.html
 ```

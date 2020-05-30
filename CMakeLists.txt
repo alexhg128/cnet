@@ -6,7 +6,6 @@ find_package(Threads REQUIRED)
 
 # Linux and MacOS
 if(UNIX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -ggdb --enable-checking=yes")
     ADD_EXECUTABLE(
         bin/Server
         src/main.c
