@@ -16,7 +16,7 @@
 // The port to listen
 #define PORT 8080
 // The max number of connections
-#define MAX_CONNECTIONS 100
+#define MAX_CONNECTIONS 1000
 // The current number of connections
 int connections = 0;
 
