@@ -123,6 +123,11 @@ void send_answer(int socket, char* response) {
     send(socket, response, strlen(response), 0);
 }
 
+void send_answer_with_len(int socket, char* response, long lenght) {
+    // Send a message to a specified socket
+    send(socket, response, lenght, 0);
+}
+
 // Test method
 void send_request() {
 
